@@ -38,11 +38,13 @@ header ion-icon{
 .main{
     width: 100%;
     height: calc(100% - 160px);
+    
     margin-top: 80px;
 }
 
 .message_list{
     margin-top: 30px;
+    overflow-y: hidden;
 }
 
 li{
@@ -55,6 +57,10 @@ li{
     border-radius: 2px;
     display: flex;
     align-items: center;
+}
+
+li:last-child   {
+    margin-bottom: 80px;
 }
 
 .message{
