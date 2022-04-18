@@ -1,6 +1,33 @@
-let usuario, statusUsuario, nomeUsuario = {}, messageUpdates = [];
+let user, userName, userStatus, messageUpdates = [];
 
+login()
 getMessages()
+
+function login(){
+    user = prompt("Insira seu nome de usuário.");
+
+    userName = {
+        name: user
+    };
+
+    let nameRequest = axios.post("https://mock-api.driven.com.br/api/v6/uol/participants", userName);
+    nameRequest.catch(nameFailure);
+
+    setInterval(checkStatus, 5000);
+}
+
+function nameFailure(error){
+    login()
+}
+
+function checkStatus(){
+    userStatus = axios.post("https://mock-api.driven.com.br/api/v6/uol/status", userName);
+    userStatus.catch(userOffline);
+}
+
+function userOffline(error){
+    login()
+}
 
 function getMessages()   {
     const promessa = axios.get("https://mock-api.driven.com.br/api/v6/uol/messages");
@@ -27,6 +54,4 @@ function renderMessages() {
         messageList.innerHTML += `<li class="private">(${messageUpdates[i].time}) ${messageUpdates[i].from} ${messageUpdates[i].text}</li>`;
       }
     }
-
-    console.log("Atualizando");
 }
