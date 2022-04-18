@@ -76,6 +76,7 @@ function sendMessage(){
     let sentMessage = axios.post("https://mock-api.driven.com.br/api/v6/uol/messages", messagePackage);
     sentMessage.then(messageSuccess);
     sentMessage.catch(messageFailure);
+    document.querySelector("textarea").value = "";
 }
 
 function messageSuccess(){
