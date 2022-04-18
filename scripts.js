@@ -1,6 +1,7 @@
-let user, userName, userStatus, messageUpdates = [];
+let user, userName = {}, userStatus, messageUpdates = [], messagePackage = {};
 
 login()
+setInterval(getMessages, 3000)
 getMessages()
 
 function login(){
@@ -11,9 +12,17 @@ function login(){
     };
 
     let nameRequest = axios.post("https://mock-api.driven.com.br/api/v6/uol/participants", userName);
+    nameRequest.then(nameSuccess);
     nameRequest.catch(nameFailure);
 
     setInterval(checkStatus, 5000);
+}
+
+function nameSuccess(success){
+    let statusCode = success.status;
+    console.log(statusCode);
+    console.log("Nome recebido com sucesso!");
+    console.log(userName)
 }
 
 function nameFailure(error){
@@ -36,10 +45,6 @@ function getMessages()   {
 
 function loadMessages(messages)   {
     messageUpdates = messages.data;
-    setInterval(renderMessages, 3000);
-}
-
-function renderMessages() {
     const messageList = document.querySelector(".message_list");
     messageList.innerHTML = "";
   
@@ -54,4 +59,31 @@ function renderMessages() {
         messageList.innerHTML += `<li class="private">(${messageUpdates[i].time}) ${messageUpdates[i].from} ${messageUpdates[i].text}</li>`;
       }
     }
+    const lastMessage = messageList.lastElementChild;
+    lastMessage.scrollIntoView()
+    console.log("Atualizado")
+}
+
+function sendMessage(){
+    let messageText = document.querySelector("textarea").value;
+    console.log(messageText);
+    messagePackage = {
+        from: user,
+        to: "Todos",
+        text: messageText,
+        type: "message"
+    };
+    let sentMessage = axios.post("https://mock-api.driven.com.br/api/v6/uol/messages", messagePackage);
+    sentMessage.then(messageSuccess);
+    sentMessage.catch(messageFailure);
+}
+
+function messageSuccess(){
+    console.log("did this work?");
+    console.log(messagePackage);
+    getMessages()
+}
+
+function messageFailure(){
+    window.location.reload()
 }
